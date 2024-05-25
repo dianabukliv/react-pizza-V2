@@ -1,42 +1,31 @@
-import React, {useEffect, useState} from 'react';
-import '/src/scss/app.scss'
+import React, { useEffect, useState, createContext } from 'react';
+import '/src/scss/app.scss';
 import Header from './components/Header';
-import Categories from './components/Categories'
-import Sort from './components/Sort';
-import PizzaBlock from './components/PizzaBlock';
-import pizzas from './assets/pizzas.json'
+import Home from './pages/Home';
+import Cart from './pages/Cart';
+import NotFound from './pages/NotFound';
+import FullPizza from './pages/FullPizza';
+import { Routes, Route } from 'react-router-dom';
+import MainLayout from '../layouts/MainLayout';
+
+export const SearchContext = createContext('');
 
 function App() {
-  const [items, setItems] = useState([])
-  useEffect(() => {
-    fetch('https://6642356d3d66a67b3436a308.mockapi.io/items')
-    .then((res) => res.json())
-    .then((arr) => {
-      setItems(arr)
-    })
-  }, [])
+  const [searchValue, setSearchValue] = useState('');
 
   return (
-     <div className="wrapper">
-      <Header />
-      <div className="content">
-        <div className="container">
-          <div className="content__top">
-          <Categories />
-          <Sort />
-          </div>
-          <h2 className="content__title">Все пиццы</h2>
-          <div className="content__items">
-          {items.map((obj) => (
-            <PizzaBlock key={obj.id} {...obj}/>
-          ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-};
+          <Routes>
+            <Route path='/' element={<MainLayout />} >
+              <Route path="/" element={<Home />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/pizza/:id" element={<FullPizza />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
+          </Routes>
 
+  );
+}
 
 export default App;
+
 
