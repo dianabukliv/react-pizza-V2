@@ -1,32 +1,32 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import qs from 'qs';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCategoryId, setCurrentPage, setSortType, setFilters, sortList } from '../components/redux/slices/filterSlice';
-import { fetchPizzas } from '../components/redux/slices/pizzasSlice'; 
+import { setCategoryId, setCurrentPage, setSortType, setFilters, sortList, selectFilter, FiltersState } from '../components/redux/slices/filterSlice';
+import { fetchPizzas, selectPizzaData } from '../components/redux/slices/pizzasSlice';
 import Categories from '../components/Categories';
 import Sort from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import { Skeleton } from '../components/PizzaBlock/Skeleton';
 import Pagination from '../components/Pagination';
 
-function Home() {
+const Home: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isSearch = React.useRef(false);
   const isMounted = React.useRef(false);
-  const { categoryId, sortType, currentPage, searchValue } = useSelector((state) => state.filter);
-  const { items, status } = useSelector((state) => state.pizza);
+  const { categoryId, sortType, currentPage, searchValue } = useSelector(selectFilter);
+  const { items, status } = useSelector(selectPizzaData);
 
   const pizzas = items
-    .filter((obj) => {
+    .filter((obj: any) => {
       if (obj.title.toLowerCase().includes(searchValue.toLowerCase())) {
         return true;
       }
       return false;
     })
-    .map((obj) => (
+    .map((obj: any) => (
       <Link key={obj.id} to={`/pizza/${obj.id}`}>
         <PizzaBlock {...obj} />
       </Link>
@@ -34,27 +34,27 @@ function Home() {
 
   const skeletons = [...new Array(6)].map((_, index) => <Skeleton key={index} />);
 
-  const onChangeCategories = (id) => {
-    dispatch(setCategoryId(id));
+  const onChangeCategories = (idx: number) => {
+    dispatch(setCategoryId(idx));
   };
 
-  const onChangePage = (number) => {
-    dispatch(setCurrentPage(number));
+  const onChangePage = (page: number) => {
+    dispatch(setCurrentPage(page));
   };
 
-  const onChangeSort = (sortOption) => {
+  const onChangeSort = (sortOption: any) => {
     dispatch(setSortType(sortOption));
   };
 
   useEffect(() => {
     if (window.location.search) {
-      const params = qs.parse(window.location.search.substring(1));
-      const sortType = sortList.find((obj) => obj.sortProperty === params.sortProperty);
+      const params = qs.parse(window.location.search.substring(1)) as unknown as FiltersState;
+      const sortType = sortList.find((obj) => obj.sortProperty === params.sortType?.sortProperty);
 
       dispatch(
         setFilters({
           ...params,
-          sortType,
+          sortType: sortType || sortList[0],
         }),
       );
       isSearch.current = true;
@@ -92,10 +92,10 @@ function Home() {
   return (
     <div className="container">
       <div className="content__top">
-        <Categories value={categoryId} onChangeCategories={onChangeCategories} />
+        <Categories value={categoryId} onChangeCategories={onChangeCategories} getCategories={() => { }} />
         <Sort value={sortType} onChangeSort={onChangeSort} />
       </div>
-      <h2 className="content__title">Все пиццы</h2>
+      <h2 className="content__title">Всі піцци</h2>
       {status === 'error' ? (
         <div className="content__error-info">
           <h2>Помилка</h2>
@@ -112,8 +112,6 @@ function Home() {
 }
 
 export default Home;
-
-
 
 
 

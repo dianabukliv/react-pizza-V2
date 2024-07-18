@@ -1,18 +1,18 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 
-const CartEmpty = () => {
+const CartEmpty: React.FC = () => {
   return (
     <>
     <div className="cart cart--empty">
-            <h2>Корзина пустая</h2>
+            <h2>Корзина пуста</h2>
             <p>
-              Вероятней всего, вы не заказывали ещё пиццу.<br />
-              Для того, чтобы заказать пиццу, перейди на главную страницу.
+              Скоріш за все, ви не замовили ще піццу.<br />
+              Для того, щоб замовити піццу, перейди на головну сторінку.
             </p>
             <img src="/img/empty-cart.png" alt="Empty cart" />
             <Link to="/" className="button button--black">
-              <span>Вернуться назад</span>
+              <span>Повернутися назад</span>
             </Link>
           </div>
           </>
