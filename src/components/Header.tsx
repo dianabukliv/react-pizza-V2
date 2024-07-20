@@ -23,7 +23,7 @@ function Header() {
     <div className="container">
       <Link to="/">
       <div className="header__logo">
-        <img width="38" src="./img/pizza-logo.svg" alt="Pizza logo" />
+        <img width="38" src="src/assets/img/pizza-logo.svg" alt="Pizza logo" />
         <div>
           <h1>React Pizza</h1>
           <p>найсмачніша піцца у всьому світі</p>
