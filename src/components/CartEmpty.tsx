@@ -10,7 +10,7 @@ const CartEmpty: React.FC = () => {
               Скоріш за все, ви не замовили ще піццу.<br />
               Для того, щоб замовити піццу, перейди на головну сторінку.
             </p>
-            <img src="/img/empty-cart.png" alt="Empty cart" />
+            <img src="src/assets/img/empty-cart.png" alt="Empty cart" />
             <Link to="/" className="button button--black">
               <span>Повернутися назад</span>
             </Link>

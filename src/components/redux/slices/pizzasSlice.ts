@@ -1,16 +1,8 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+// Імпортуємо локальний JSON з піцами
+import pizzas from '/src/pizzas'; 
 import { RootState } from '../store';
 
-export const fetchPizzas = createAsyncThunk('pizza/fetchPizzasStatus', async (params: Record<string, string>) => {
-  const { sortType, currentPage, categoryId } = params;
-  const { data } = await axios.get(
-    `https://6642356d3d66a67b3436a308.mockapi.io/items?page=${currentPage}&limit=4&${
-      categoryId > 0 ? `category=${categoryId}` : ''
-    }&sortBy=${sortType.sortProperty}&order=desc`
-  );
-  return data as Pizza[];
-});
 type Pizza = {
   id: string;
   title: string; 
@@ -20,6 +12,7 @@ type Pizza = {
   types: number[];
   rating: number;
 }
+
 interface PizzaSliceState {
   items: Pizza[];
   status: 'loading' | 'success' | 'error';
@@ -29,6 +22,28 @@ const initialState: PizzaSliceState = {
   items: [],
   status: 'loading',
 };
+
+// Заміняємо fetchPizzas на локальне завантаження
+export const fetchPizzas = createAsyncThunk('pizza/fetchPizzasStatus', async (params: Record<string, string>) => {
+  const { sortType, currentPage, categoryId } = params;
+
+  // Фільтруємо та сортуємо піци з локального JSON
+  let filteredPizzas = pizzas;
+
+  // Фільтрація за категорією
+  if (categoryId > 0) {
+    filteredPizzas = filteredPizzas.filter(pizza => pizza.category === Number(categoryId));
+  }
+
+  // Сортування
+  filteredPizzas = filteredPizzas.sort((a, b) => b[sortType.sortProperty] - a[sortType.sortProperty]);
+
+  // Пагінація
+  const startIndex = (currentPage - 1) * 4;
+  const paginatedPizzas = filteredPizzas.slice(startIndex, startIndex + 4);
+
+  return paginatedPizzas as Pizza[];
+});
 
 const pizzaSlice = createSlice({
   name: 'pizza',
@@ -54,7 +69,9 @@ const pizzaSlice = createSlice({
       });
   },
 });
+
 export const selectPizzaData = (state: RootState) => state.pizza;
 export const { setItems } = pizzaSlice.actions;
 
 export default pizzaSlice.reducer;
+

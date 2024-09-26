@@ -1,6 +1,6 @@
 import React from 'react';
-import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import pizzas from '/src/pizzas.json';
 
 const FullPizza: React.FC = () => {
   const [pizza, setPizza] = React.useState<{
@@ -12,17 +12,22 @@ const FullPizza: React.FC = () => {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    async function fetchPizza() {
+    function fetchPizza() {
       try {
-        const { data } = await axios.get(`https://6642356d3d66a67b3436a308.mockapi.io/items/${id}`);
-        setPizza(data);
+        const selectedPizza = pizzas.find(p => p.id === id);
+        if (selectedPizza) {
+          setPizza(selectedPizza);
+        } else {
+          throw new Error('Pizza not found');
+        }
       } catch (error) {
+        console.error('Error fetching pizza:', error);
         alert('Помилка при отриманні піци');
-        navigate('/')
+        navigate('/');
       }
     }
     fetchPizza();
-  }, [id]); 
+  }, [id, navigate]);
 
   if (!pizza) {
     return <>Загрузка...</>;
