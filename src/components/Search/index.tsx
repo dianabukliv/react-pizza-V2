@@ -2,7 +2,8 @@ import React from 'react';
 import debounce from 'lodash.debounce';
 import styles from './Search.module.scss';
 import { useDispatch } from 'react-redux';
-import { setSearchValue } from '../redux/slices/filterSlice'; // Adjust the path as needed
+import { setSearchValue } from '../redux/slices/filterSlice'; 
+import Search from '/src/assets/img/search'
 
 const Search: React.FC = () => {
   const dispatch = useDispatch();
@@ -29,7 +30,7 @@ const Search: React.FC = () => {
 
   return (
     <div className={styles.root}>
-      <img className={styles.icon} src='/public/search.svg' alt='search icon'/>
+      <img className={styles.icon} src={Search} alt='search icon'/>
       <input 
         ref={inputRef}
         value={value}

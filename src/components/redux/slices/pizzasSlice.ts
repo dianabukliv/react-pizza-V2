@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-// Імпортуємо локальний JSON з піцами
 import pizzas from '/src/pizzas'; 
 import { RootState } from '../store';
 
